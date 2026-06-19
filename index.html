@@ -146,8 +146,12 @@
     touch-action:pan-y; -webkit-overflow-scrolling:touch;
     overscroll-behavior:contain;
   }
-  #letterCard h2{ text-align:center; color:#c25a7a; font-family:Georgia, serif; }
-  #letterCard .body{ white-space:pre-wrap; font-family:Georgia, "Times New Roman", serif; font-size:16px; line-height:1.65; }
+  #letterCard h2{ text-align:center; color:#c25a7a; font-family:Georgia, serif; margin-bottom:2px; }
+  #letterCard .scrollhint{ text-align:center; font-size:11px; color:#b07a55; margin:0 0 8px; font-style:italic; }
+  #letterCard .body{ white-space:pre-wrap; font-family:Georgia, "Times New Roman", serif; font-size:15.5px; line-height:1.6; }
+  #letterCard::-webkit-scrollbar{ width:8px; }
+  #letterCard::-webkit-scrollbar-thumb{ background:#d8a36e; border-radius:8px; }
+  #letterCard::-webkit-scrollbar-track{ background:rgba(0,0,0,.06); }
   #letterCard .btn{ background:var(--accent2); color:#fff; }
 
   #hearts{ position:fixed; inset:0; z-index:30; pointer-events:none; overflow:hidden; }
@@ -233,6 +237,7 @@
 <div class="overlay" id="letterOv">
   <div class="card" id="letterCard">
     <h2>💌 Para você 💌</h2>
+    <p class="scrollhint">↓ deslize para ler a carta inteira ↓</p>
     <div class="body" id="letterBody"></div>
     <div style="text-align:center"><button class="btn" id="letterClose">Reler depois ❤️</button></div>
   </div>
@@ -737,10 +742,10 @@ document.querySelectorAll('#keypad .key').forEach(k=>{
 document.getElementById('keyDel').addEventListener('click', ()=>{ entered=entered.slice(0,-1); renderKey(); });
 document.getElementById('keyOk').addEventListener('click', checkCode);
 
-// prevenir scroll/zoom de toque no jogo, MAS permitir rolagem dentro
-// dos balões de texto (carta, pistas) que podem ser mais altos que a tela.
+// prevenir scroll/zoom de toque durante o JOGO. Quando uma janela
+// (carta/pista/cadeado) está aberta, liberamos a rolagem normalmente.
 document.addEventListener('touchmove', e=>{
-  if(e.target.closest && e.target.closest('.card')) return; // deixa o balão rolar
+  if(state.modalOpen) return;   // modal aberto: deixa rolar livremente
   e.preventDefault();
 }, {passive:false});
 document.addEventListener('gesturestart', e=>e.preventDefault());
